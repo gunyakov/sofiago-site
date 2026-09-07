@@ -1,0 +1,12 @@
+/vendor/
+/config/config.php
+/config/config.*.php
+!/config/config.example.php
+/database/.installed
+/public/uploads/*
+!/public/uploads/.gitkeep
+/vue-widgets/node_modules/
+/vue-widgets/dist/
+/public/assets/vue/
+.DS_Store
+*.log

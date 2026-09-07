@@ -1,0 +1,125 @@
+/*
+ * Dashboard dark mode — written from scratch. The vendored dashboard theme ships the
+ * dark/light toggle buttons and the jQuery wiring (app.min.js already toggles an `html.dark`
+ * class and remembers it in localStorage under "dark-mode"), but no actual dark palette: zero
+ * `.dark`/`html.dark` rules exist anywhere in app.min.css or style.css. The buttons were
+ * present in the original theme's markup but did nothing. This file is what makes them work.
+ */
+
+html.dark body,
+html.dark .content-wrapper,
+html.dark .main-content {
+    background-color: #161a1d;
+    color: #d7dade;
+}
+
+html.dark .sidebar {
+    background: #1c2126;
+    border-right-color: #2a3037;
+}
+
+html.dark .sidebar-header {
+    border-color: #2a3037;
+}
+
+html.dark .sidebar-brand_text,
+html.dark .nav-label_text {
+    color: #d7dade;
+}
+
+html.dark .sidebar-nav .metismenu > li > a {
+    color: #b7bcc3;
+}
+
+html.dark .sidebar-nav .metismenu > li.mm-active > a,
+html.dark .sidebar-nav .metismenu > li > a:hover {
+    background: rgba(255, 90, 31, .12);
+    color: #ff5a1f;
+}
+
+html.dark .navbar-custom-menu {
+    background: #1c2126;
+    border-color: #2a3037;
+}
+
+html.dark .navbar-custom-menu .nav-link {
+    color: #d7dade;
+}
+
+html.dark .card,
+html.dark .dropdown-menu,
+html.dark .modal-content {
+    background-color: #1f242a;
+    color: #d7dade;
+    border-color: #2a3037;
+}
+
+html.dark .card-header {
+    background-color: rgba(255, 255, 255, .03);
+    border-color: #2a3037;
+}
+
+html.dark .table {
+    color: #d7dade;
+    border-color: #2a3037;
+}
+
+html.dark .table > :not(caption) > * > * {
+    background-color: transparent;
+    color: #d7dade;
+    border-bottom-color: #2a3037;
+}
+
+html.dark .form-control,
+html.dark .form-select {
+    background-color: #14171a;
+    border-color: #2a3037;
+    color: #d7dade;
+}
+
+html.dark .form-control:focus,
+html.dark .form-select:focus {
+    background-color: #14171a;
+    color: #d7dade;
+}
+
+html.dark .form-control::placeholder {
+    color: #6b7178;
+}
+
+html.dark .text-muted {
+    color: #8a9099 !important;
+}
+
+html.dark .border,
+html.dark .border-top,
+html.dark .border-bottom,
+html.dark hr {
+    border-color: #2a3037 !important;
+}
+
+html.dark .bg-light {
+    background-color: #22272d !important;
+}
+
+html.dark .alert-light {
+    background-color: #22272d;
+    border-color: #2a3037;
+    color: #d7dade;
+}
+
+html.dark .nav-tabs {
+    border-color: #2a3037;
+}
+
+html.dark .nav-tabs .nav-link {
+    color: #8a9099;
+}
+
+html.dark .nav-tabs .nav-link.active {
+    background-color: #1f242a;
+    border-color: #2a3037 #2a3037 #1f242a;
+    color: #d7dade;
+}
+
+/* Only one of the two theme buttons is ever visible (app.min.js toggles them) — no extra CSS needed for that. */

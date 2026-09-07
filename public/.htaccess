@@ -1,0 +1,16 @@
+RewriteEngine On
+
+# Apache/PHP-FPM commonly drops the Authorization header before PHP ever sees it (an old
+# CGI-era default, still on by default on plenty of hosts) — sofiago-flutter's API auth
+# (Auth::attemptBearer(), Guards::requireApiAuth()) needs it in $_SERVER['HTTP_AUTHORIZATION'].
+# Forwarding it explicitly here is cheap insurance against depending on the host's own
+# php.ini/vhost already doing it — added proactively, not because a bearer request was seen
+# failing on this host specifically.
+RewriteCond %{HTTP:Authorization} ^(.+)
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
+
+# Serve real files/directories (assets, uploads) as-is; everything else goes through the
+# front controller so pretty URLs like /listings/some-place work.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]

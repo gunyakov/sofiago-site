@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+    <circle cx="128" cy="128" r="128" fill="#ff5a1f"/>
+    <!-- fork -->
+    <rect x="80" y="60" width="8" height="58" rx="4" fill="#fff"/>
+    <rect x="94" y="60" width="8" height="58" rx="4" fill="#fff"/>
+    <rect x="108" y="60" width="8" height="58" rx="4" fill="#fff"/>
+    <rect x="78" y="112" width="42" height="10" rx="5" fill="#fff"/>
+    <rect x="91" y="118" width="16" height="78" rx="8" fill="#fff"/>
+    <!-- knife -->
+    <polygon points="145,60 180,55 165,130 155,130" fill="#fff"/>
+    <rect x="158" y="130" width="14" height="68" rx="7" fill="#fff"/>
+</svg>

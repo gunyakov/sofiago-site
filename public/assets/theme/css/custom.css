@@ -1,0 +1,206 @@
+/*
+ * Our own additions on top of the vendored ListOn theme — kept in a separate file so a future
+ * theme update never has to be diffed against our edits inside style.css itself.
+ */
+
+/* -----------------------------------------------------------------
+   /explore full-bleed half-map layout, modeled directly on the theme's own listings-map.html /
+   listings-map-grid-1.html — including its actual sizing mechanism, not just the general
+   look: sidebar-filters and items-content are fixed pixel widths (300px/350px, growing to
+   350px/700px at xxl) that sit in normal flow on the left, and map-content is `position: fixed`
+   at the right edge with `width: calc(100% - <sidebar+list>px)` — it isn't a flex sibling
+   sharing the remaining space, it's pinned to fill whatever the fixed-width columns didn't
+   take. Copied 1:1 except `top`/height, which use our own nav's real height (88px) instead of
+   ListOn's hard-coded `9.648rem` (that header also carries a merged-in search bar; ours
+   doesn't).
+----------------------------------------------------------------- */
+
+.explore-layout {
+    display: flex;
+    flex-direction: column;
+}
+
+.explore-filters-col {
+    background: var(--bs-body-bg);
+}
+
+.explore-list-col {
+    padding: 24px 16px;
+    min-width: 0;
+}
+
+.explore-map-col #map-explore {
+    height: 380px;
+    width: 100%;
+}
+
+@media (min-width: 992px) {
+    .explore-layout {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .explore-filters-col {
+        flex: 0 0 300px;
+        width: 300px;
+        border-right: 1px solid var(--bs-border-color);
+        position: sticky;
+        top: 88px;
+        max-height: calc(100vh - 88px);
+        overflow-y: auto;
+    }
+
+    .explore-list-col {
+        flex: 0 0 350px;
+        width: 350px;
+        padding: 24px;
+        position: sticky;
+        top: 88px;
+        max-height: calc(100vh - 88px);
+        overflow-y: auto;
+    }
+
+    /* Not a flex sibling below this width — see comment above the block. */
+    .explore-map-col {
+        position: fixed;
+        top: 88px;
+        right: 0;
+        width: calc(100% - 650px);
+        height: calc(100vh - 88px);
+    }
+
+    .explore-map-col #map-explore {
+        height: 100%;
+    }
+}
+
+@media (min-width: 1400px) {
+    .explore-filters-col {
+        flex-basis: 350px;
+        width: 350px;
+    }
+
+    .explore-list-col {
+        flex-basis: 700px;
+        width: 700px;
+    }
+
+    .explore-map-col {
+        width: calc(100% - 1050px);
+    }
+}
+
+.explore-view-toggle .btn {
+    color: var(--bs-body-color);
+}
+
+.explore-view-toggle .btn.active {
+    background: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: #fff;
+}
+
+/* Below the half-map breakpoint the filters/map columns would otherwise sit off-screen at the
+   bottom of a long list (DOM order: filters, list, map) — same problem the theme solves with
+   its own "All filters" / "Map" links that open each as a full-screen overlay. Same idea here:
+   both hidden by default below lg, shown full-screen only while .mobile-open (toggled by the
+   inline script next to the buttons in listings/index.tpl.php). */
+@media (max-width: 991.98px) {
+    .explore-filters-col,
+    .explore-map-col {
+        display: none;
+    }
+
+    .explore-filters-col.mobile-open,
+    .explore-map-col.mobile-open {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 1050;
+        background: var(--bs-body-bg);
+    }
+
+    .explore-filters-col.mobile-open {
+        overflow-y: auto;
+    }
+
+    .explore-map-col.mobile-open #map-explore {
+        height: 100%;
+    }
+
+    .explore-map-toggle {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1030;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, .25);
+    }
+
+    .explore-map-close {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 1060;
+    }
+}
+
+/* Star-rating input on the comment form (see listings/show.tpl.php) — 5 hidden radios + labels,
+   reversed with flex so DOM order (5..1) puts the general-sibling CSS trick in the right
+   direction: checking/hovering star N colors it and every *later* DOM sibling (i.e. every
+   visually-earlier star, values 1..N). No JS needed. */
+.star-rating-input {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: 4px;
+}
+
+.star-rating-input input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.star-rating-input label {
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: #d7dbe0;
+    transition: color .15s ease;
+}
+
+.star-rating-input input:checked ~ label,
+.star-rating-input label:hover,
+.star-rating-input label:hover ~ label {
+    color: var(--bs-primary);
+}
+
+.star-rating-input input:focus-visible + label {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Map marker popup (vue-widgets/src/map.js buildPopupHtml) — strip MapLibre's default padded
+   white box so the theme's own card component (image + overlaid rating/title) can fill the
+   whole popup edge-to-edge, matching the theme's map-grid card look. */
+.maplibregl-popup.listing-popup .maplibregl-popup-content {
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+}
+
+.maplibregl-popup.listing-popup .maplibregl-popup-close-button {
+    color: #22252a;
+    background: rgba(255, 255, 255, .85);
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    line-height: 20px;
+    font-size: 16px;
+    right: 6px;
+    top: 6px;
+    z-index: 2;
+}
