@@ -2,10 +2,12 @@
     <div class="container pt-4">
         <div class="py-5">
             <!-- "Download Our App" block from the theme's home-map.html — real Google Play link,
-                 iOS still has none (per the user), the button stays as a visible placeholder. -->
+                 iOS still has none (per the user), the button stays as a visible placeholder.
+                 app-screenshot.png replaced the theme's stock "ListOn" phone mockup with a real
+                 sofiago-flutter screenshot (map + live vehicles) in a plain generated bezel. -->
             <div class="bg-primary rounded-4">
                 <div class="col-xxl-10 col-md-11 col-10 d-flex flex-md-row flex-column-reverse align-items-md-end align-items-center mx-auto px-0 gap-4">
-                    <img class="app-image flex-shrink-0" src="<?= e(asset('theme/images/phone-mpckup.png')) ?>" width="270" alt="">
+                    <img class="app-image flex-shrink-0" src="<?= e(asset('theme/images/app-screenshot.png')) ?>" width="270" alt="">
                     <div class="align-items-lg-center align-self-center d-flex flex-column flex-lg-row ps-xxl-4 pt-5 py-md-3 text-center text-md-start">
                         <div class="me-md-5">
                             <h4 class="text-white"><?= e(t('footer.app_title')) ?></h4>
@@ -34,6 +36,10 @@
                     <li class="list-inline-item"><a href="<?= e(url('/about')) ?>"><?= e(t('nav.about')) ?></a></li>
                     <li class="list-inline-item"><a href="<?= e(url('/terms')) ?>"><?= e(t('footer.terms')) ?></a></li>
                     <li class="list-inline-item"><a href="<?= e(url('/privacy')) ?>"><?= e(t('footer.privacy')) ?></a></li>
+                    <li class="list-inline-item"><a href="<?= e(url('/delete-account')) ?>"><?= e(t('footer.delete_account')) ?></a></li>
+                    <!-- sofiago-vue now lives at app.sofiago.eu (see the Flutter/Vue migration plan) — a
+                         direct link keeps it reachable from the main site's footer on every page. -->
+                    <li class="list-inline-item"><a href="https://app.sofiago.eu/" target="_blank" rel="noopener"><?= e(t('footer.open_app')) ?></a></li>
                 </ul>
             </div>
             <div class="col-lg order-md-first">

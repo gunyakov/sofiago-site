@@ -59,6 +59,17 @@ final class PageController
         ]);
     }
 
+    // Google Play's Data Safety section requires its own public URL describing the account
+    // deletion process (not just a paragraph inside the privacy policy) — same per-locale
+    // whole-document pattern as terms()/privacy() above.
+    public function deleteAccount(array $params): void
+    {
+        echo view('legal/delete-account-' . locale() . '.tpl.php', [
+            'title' => t('page.delete_account_title'),
+            'supportEmail' => self::SUPPORT_EMAIL,
+        ]);
+    }
+
     public function robots(array $params): void
     {
         header('Content-Type: text/plain; charset=utf-8');
@@ -84,7 +95,7 @@ final class PageController
     {
         header('Content-Type: application/xml; charset=utf-8');
 
-        $staticPages = ['/', '/about', '/explore', '/terms', '/privacy'];
+        $staticPages = ['/', '/about', '/explore', '/terms', '/privacy', '/delete-account'];
         $listings = Listing::allActiveForSitemap();
 
         echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";

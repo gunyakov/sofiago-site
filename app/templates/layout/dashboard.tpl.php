@@ -35,7 +35,9 @@
         // (unlike the ListOn demo's, which links to ~40 template showcase pages).
         $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
         $isActive = static fn (string $prefix): string => str_starts_with($currentPath, $prefix) ? 'mm-active' : '';
-        $localeNames = ['en' => 'EN', 'bg' => 'BG', 'ru' => 'RU'];
+        // See nav.tpl.php's comment on this same line — 'ru' stays supported, just not offered
+        // as a one-click switch here.
+        $localeNames = ['en' => 'EN', 'bg' => 'BG'];
         ?>
         <nav class="sidebar">
             <div class="sidebar-header">

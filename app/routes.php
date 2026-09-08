@@ -26,6 +26,7 @@ $router->get('/', [PageController::class, 'home']);
 $router->get('/about', [PageController::class, 'about']);
 $router->get('/terms', [PageController::class, 'terms']);
 $router->get('/privacy', [PageController::class, 'privacy']);
+$router->get('/delete-account', [PageController::class, 'deleteAccount']);
 $router->get('/robots.txt', [PageController::class, 'robots']);
 $router->get('/sitemap.xml', [PageController::class, 'sitemap']);
 

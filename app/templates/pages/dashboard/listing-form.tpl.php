@@ -355,14 +355,19 @@ if ($oldHours !== null) {
                         <textarea name="description_en" class="form-control" rows="6" required><?= $isEdit ? e($listing['description_en']) : old('description_en') ?></textarea>
                         <div class="form-text"><?= e(t('dashboard.form.description_en_hint')) ?></div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-12">
                         <label class="fw-medium mb-2"><?= e(t('dashboard.form.description_bg')) ?></label>
                         <textarea name="description_bg" class="form-control" rows="4"><?= $isEdit ? e((string) $listing['description_bg']) : old('description_bg') ?></textarea>
                     </div>
-                    <div class="col-sm-6">
-                        <label class="fw-medium mb-2"><?= e(t('dashboard.form.description_ru')) ?></label>
-                        <textarea name="description_ru" class="form-control" rows="4"><?= $isEdit ? e((string) $listing['description_ru']) : old('description_ru') ?></textarea>
-                    </div>
+                    <?php // description_ru field hidden from the form per the user (2026-09-08) — it was
+                    // already optional (ListingManageController::validate() defaults it to null, no
+                    // DB/API impact either way), so this is UI-only. An existing listing that already
+                    // has a description_ru keeps it — see the hidden field just below — this only stops
+                    // *new* Russian descriptions from being entered here. Don't remove the column or the
+                    // controller/model handling; only this visible field is hidden. ?>
+                    <?php if ($isEdit && (string) $listing['description_ru'] !== ''): ?>
+                    <input type="hidden" name="description_ru" value="<?= e((string) $listing['description_ru']) ?>">
+                    <?php endif; ?>
                     <div class="col-sm-4">
                         <label class="fw-medium mb-2"><?= e(t('dashboard.form.phone')) ?></label>
                         <input type="text" name="phone" class="form-control" value="<?= $isEdit ? e($listing['phone']) : old('phone') ?>">

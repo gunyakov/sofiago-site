@@ -1,5 +1,9 @@
 <?php
-$localeNames = ['en' => 'EN', 'bg' => 'BG', 'ru' => 'RU'];
+// 'ru' stays a fully supported locale (lang/ru.json, ?lang=ru, the ru cookie once set) — just
+// not offered as a one-click switch here. Per the user (2026-09-08): direct language-switch UI
+// is hidden site-wide/dashboard-wide given current bg sentiment around Russian, without pulling
+// ru support itself. Don't add 'ru' back to this list without asking first.
+$localeNames = ['en' => 'EN', 'bg' => 'BG'];
 ?>
 <nav class="navbar navbar-expand-lg navbar-light sticky-top">
     <div class="container">

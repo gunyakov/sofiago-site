@@ -49,6 +49,7 @@
     <?= $content ?>
 
     <?= partial('footer.tpl.php') ?>
+    <?= partial('transport-app-notice.tpl.php') ?>
 
     <script src="<?= e(asset('theme/plugins/jQuery/jquery.min.js')) ?>"></script>
     <script src="<?= e(asset('theme/plugins/bootstrap/js/bootstrap.bundle.min.js')) ?>"></script>
@@ -73,7 +74,32 @@
     // toggle button existed nowhere in our markup either, so there was nothing to wire up yet. ?>
     <script src="<?= e(asset('theme/js/script.js')) ?>"></script>
     <script src="<?= e(asset('js/favorite.js')) ?>" defer></script>
+    <script src="<?= e(asset('js/transport-app-notice.js')) ?>" defer></script>
     <?= $pageScripts ?? '' ?>
+
+    <?php // Moved over from sofiago-vue's index.html when app.sofiago.eu took over the map app and
+    // this site took over the sofiago.eu root — same Statcounter project (13170671), so the
+    // visit counter carries over instead of resetting. Gated the same way robots()/sitemap() gate
+    // indexing: 'allow_indexing' is only true on the real, promoted sofiago.eu config.php, so
+    // local/staging (new.sofiago.eu) traffic never pollutes the count. ?>
+    <?php if (app()->config->get('app.allow_indexing', false)): ?>
+    <!-- Default Statcounter code for SofiaGO https://sofiago.eu -->
+    <script type="text/javascript">
+        var sc_project = 13170671;
+        var sc_invisible = 1;
+        var sc_security = 'ea1944d3';
+    </script>
+    <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+    <noscript>
+        <div class="statcounter">
+            <a title="free web stats" href="https://statcounter.com/" target="_blank"
+                ><img class="statcounter" src="https://c.statcounter.com/13170671/0/ea1944d3/1/"
+                    alt="free web stats" referrerpolicy="no-referrer-when-downgrade"
+            /></a>
+        </div>
+    </noscript>
+    <!-- End of Statcounter Code -->
+    <?php endif; ?>
 </body>
 
 </html>
