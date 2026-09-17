@@ -44,6 +44,13 @@ final class ListingController
             'favoriteIds' => auth()->check() ? Favorite::idsForUser((int) auth()->id()) : [],
             'pageStyles' => map_widget_styles(),
             'pageScripts' => map_widget_scripts(),
+            // 'view' is a display toggle over the same result set (list vs grid), not different
+            // content — dropped from the canonical alongside the always-dropped 'lang'.
+            'canonical' => canonical_url(['view']),
+            // Deep pagination pages are thin/duplicate-ish by nature — keep them crawlable
+            // (their listing links still pass equity) but out of the index; only page 1 per
+            // filter combination is worth ranking on its own.
+            'robotsNoindex' => $page > 1,
         ]);
     }
 

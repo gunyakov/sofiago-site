@@ -18,7 +18,7 @@ $localeNames = ['en' => 'EN', 'bg' => 'BG'];
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <?php foreach ($localeNames as $code => $label): ?>
-                    <li><a class="dropdown-item <?= locale() === $code ? 'active' : '' ?>" href="<?= e(lang_switch_url($code)) ?>"><?= e($label) ?></a></li>
+                    <li><a class="dropdown-item <?= locale() === $code ? 'active' : '' ?>" href="<?= e(lang_switch_url($code)) ?>" rel="nofollow"><?= e($label) ?></a></li>
                     <?php endforeach; ?>
                 </ul>
             </div>

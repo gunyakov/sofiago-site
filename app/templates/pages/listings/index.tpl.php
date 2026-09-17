@@ -90,11 +90,25 @@ $categoryLinkParams = static fn (string $categorySlug) => array_filter(
         <?php if ($pages > 1): ?>
         <nav class="mt-4">
             <ul class="pagination justify-content-center">
-                <?php for ($p = 1; $p <= $pages; $p++): ?>
+                <?php
+                // Windowed instead of one link per page: unbounded 1..$pages here (deep
+                // categories run into the dozens) meant page 1 itself linked straight out to
+                // every deep page, handing crawlers an ever-growing surface of thin/duplicate
+                // pagination URLs to chase. First, last, and $page's immediate neighbors only.
+                $shown = array_unique(array_filter(
+                    [1, $pages, ...range(max(1, $page - 2), min($pages, $page + 2))],
+                    static fn ($p) => $p >= 1 && $p <= $pages
+                ));
+                sort($shown);
+                $prev = null;
+                foreach ($shown as $p):
+                    if ($prev !== null && $p - $prev > 1): ?>
+                    <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                    <?php endif; ?>
                 <li class="page-item <?= $p === $page ? 'active' : '' ?>">
                     <a class="page-link" href="<?= e(url('/explore?' . http_build_query(array_merge($otherParams, ['view' => $view, 'page' => $p])))) ?>"><?= $p ?></a>
                 </li>
-                <?php endfor; ?>
+                <?php $prev = $p; endforeach; ?>
             </ul>
         </nav>
         <?php endif; ?>

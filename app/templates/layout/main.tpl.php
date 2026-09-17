@@ -18,6 +18,10 @@
     <?php if (!empty($metaDescription)): ?>
     <meta name="description" content="<?= e($metaDescription) ?>">
     <?php endif; ?>
+    <link rel="canonical" href="<?= e($canonical ?? canonical_url()) ?>">
+    <?php if (!empty($robotsNoindex)): ?>
+    <meta name="robots" content="noindex,follow">
+    <?php endif; ?>
     <link rel="shortcut icon" href="<?= e(asset('theme/images/favicon.png')) ?>">
 
     <link href="<?= e(asset('theme/plugins/aos/aos.min.css')) ?>" rel="stylesheet">

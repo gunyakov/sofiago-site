@@ -63,6 +63,30 @@ function lang_switch_url(string $locale): string
     return url(ltrim($path, '/') . '?' . http_build_query($query));
 }
 
+/**
+ * The current request's canonical URL. `lang` is always dropped — it's a cookie-set display
+ * preference (see Lang::resolve()), not distinct content, so `?lang=en` on an already-English
+ * page would otherwise canonicalize to a byte-identical duplicate of the plain URL. Callers can
+ * drop further params that don't change the underlying content either (e.g. /explore's `view`,
+ * list vs grid being a display toggle over the same result set). Remaining params are sorted so
+ * the same request in a different param order still canonicalizes to one URL.
+ *
+ * @param array<int, string> $alsoDrop
+ */
+function canonical_url(array $alsoDrop = []): string
+{
+    $path = (string) (parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
+    $query = $_GET;
+    foreach ([...$alsoDrop, 'lang'] as $param) {
+        unset($query[$param]);
+    }
+    ksort($query);
+
+    $qs = http_build_query($query);
+
+    return url(ltrim($path, '/') . ($qs !== '' ? '?' . $qs : ''));
+}
+
 /** Render pages/{$page} wrapped in the main layout. */
 /**
  * $layout lets dashboard/admin controllers opt into the separate dashboard shell
