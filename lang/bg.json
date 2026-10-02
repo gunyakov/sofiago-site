@@ -484,5 +484,18 @@
     "admin.ownership_claim_approved": "Собствеността на „:title“ е прехвърлена на :name.",
     "admin.ownership_claim_rejected": "Заявката за собственост на „:title“ е отхвърлена.",
     "nav.reports_moderation": "Сигнали",
-    "nav.ownership_claims_moderation": "Заявки за собственост"
+    "nav.ownership_claims_moderation": "Заявки за собственост",
+    "stop_share.not_found": "Спирката не е намерена.",
+    "stop_share.stop_code": "Спирка :code",
+    "stop_share.description": "Пристигания в реално време на тази спирка — SofiaGO, градският транспорт в София.",
+    "stop_share.open_app": "Отвори в SofiaGO",
+    "stop_share.show_on_map": "Покажи на картата",
+    "stop_share.next_departures": "Следващи пристигания",
+    "stop_share.min": "мин",
+    "stop_share.now": "сега",
+    "stop_share.none": "Няма пристигания в следващите два часа.",
+    "stop_share.error": "Неуспешно зареждане. Опитайте отново след малко.",
+    "stop_share.scheduled": "по разписание",
+    "stop_share.app_pitch": "Превозните средства на живо, маршрути и разписания — в приложението SofiaGO.",
+    "stop_share.get_app": "Изтегли от Google Play"
 }

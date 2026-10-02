@@ -484,5 +484,18 @@
     "admin.ownership_claim_approved": "Ownership of \":title\" transferred to :name.",
     "admin.ownership_claim_rejected": "Ownership request for \":title\" rejected.",
     "nav.reports_moderation": "Reports",
-    "nav.ownership_claims_moderation": "Ownership Claims"
+    "nav.ownership_claims_moderation": "Ownership Claims",
+    "stop_share.not_found": "Stop not found.",
+    "stop_share.stop_code": "Stop :code",
+    "stop_share.description": "Live departures from this stop — SofiaGO, Sofia public transport.",
+    "stop_share.open_app": "Open in SofiaGO",
+    "stop_share.show_on_map": "Show on map",
+    "stop_share.next_departures": "Next departures",
+    "stop_share.min": "min",
+    "stop_share.now": "now",
+    "stop_share.none": "No departures in the next two hours.",
+    "stop_share.error": "Could not load departures. Try again in a moment.",
+    "stop_share.scheduled": "timetable",
+    "stop_share.app_pitch": "Live vehicles on the map, routes and timetables — in the SofiaGO app.",
+    "stop_share.get_app": "Get it on Google Play"
 }

@@ -484,5 +484,18 @@
     "admin.ownership_claim_approved": "Владение местом «:title» передано :name.",
     "admin.ownership_claim_rejected": "Заявка на владение местом «:title» отклонена.",
     "nav.reports_moderation": "Жалобы",
-    "nav.ownership_claims_moderation": "Заявки на владение"
+    "nav.ownership_claims_moderation": "Заявки на владение",
+    "stop_share.not_found": "Остановка не найдена.",
+    "stop_share.stop_code": "Остановка :code",
+    "stop_share.description": "Прибытия в реальном времени на этой остановке — SofiaGO, транспорт Софии.",
+    "stop_share.open_app": "Открыть в SofiaGO",
+    "stop_share.show_on_map": "Показать на карте",
+    "stop_share.next_departures": "Ближайшие прибытия",
+    "stop_share.min": "мин",
+    "stop_share.now": "сейчас",
+    "stop_share.none": "Нет прибытий в ближайшие два часа.",
+    "stop_share.error": "Не удалось загрузить. Попробуйте ещё раз чуть позже.",
+    "stop_share.scheduled": "по расписанию",
+    "stop_share.app_pitch": "Транспорт на карте в реальном времени, маршруты и расписания — в приложении SofiaGO.",
+    "stop_share.get_app": "Скачать в Google Play"
 }

@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "eu.sofiago",
+      "sha256_cert_fingerprints": [
+        "15:36:29:AE:26:4F:A7:78:F7:49:BF:8E:A9:4A:EF:87:12:82:3E:1F:CB:97:37:B7:CD:96:3C:3B:75:02:72:63",
+        "93:59:93:CA:64:5D:E7:D3:14:5D:32:E5:57:49:60:D6:43:15:28:A3:C1:5E:27:25:41:B1:92:4C:3F:8F:41:DC"
+      ]
+    }
+  }
+]
