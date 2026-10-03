@@ -74,6 +74,9 @@ $router->post('/dashboard/listings/{id}/icon/delete', [ListingManageController::
 
 $router->get('/dashboard/favorites', [FavoriteController::class, 'index']);
 $router->post('/api/favorites/{id}/toggle', [FavoriteController::class, 'toggle']);
+$router->get('/api/favorites', [FavoriteController::class, 'indexJson']);
+$router->post('/api/listings/{slug}/favorite', [FavoriteController::class, 'addJson']);
+$router->delete('/api/listings/{slug}/favorite', [FavoriteController::class, 'removeJson']);
 
 // -------------------------------------------------------------------------------------
 // sofiago-flutter's native Account tab — bearer-token JSON, no session/CSRF (see Guards::
@@ -85,6 +88,8 @@ $router->post('/api/auth/register', [AuthApiController::class, 'register']);
 $router->post('/api/auth/login', [AuthApiController::class, 'login']);
 $router->post('/api/auth/logout', [AuthApiController::class, 'logout']);
 $router->get('/api/auth/me', [AuthApiController::class, 'me']);
+$router->post('/api/auth/me', [AuthApiController::class, 'update']);
+$router->post('/api/auth/password', [AuthApiController::class, 'changePassword']);
 
 $router->get('/api/categories', [ListingApiController::class, 'categories']);
 $router->get('/api/amenities', [ListingApiController::class, 'amenities']);

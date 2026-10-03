@@ -20,6 +20,35 @@ final class Favorite
         return true;
     }
 
+    /** Idempotent add — the app's sync can repeat it. */
+    public static function add(int $userId, int $listingId): void
+    {
+        if (!self::isFavorited($userId, $listingId)) {
+            db()->insert('favorites', ['user_id' => $userId, 'listing_id' => $listingId]);
+        }
+    }
+
+    public static function remove(int $userId, int $listingId): void
+    {
+        db()->delete('favorites', 'user_id = ? AND listing_id = ?', [$userId, $listingId]);
+    }
+
+    /**
+     * @return array<int, array<string, mixed>> What sofiago-flutter's sync needs per favorite:
+     *   slug/title/position, active listings with coordinates only (the app saves them as places).
+     */
+    public static function placesForUser(int $userId): array
+    {
+        return db()->all(
+            "SELECT l.slug, l.title, l.lat, l.lng
+             FROM favorites f
+             JOIN listings l ON l.id = f.listing_id
+             WHERE f.user_id = ? AND l.status = 'active' AND l.lat IS NOT NULL AND l.lng IS NOT NULL
+             ORDER BY f.created_at ASC",
+            [$userId]
+        );
+    }
+
     public static function isFavorited(int $userId, int $listingId): bool
     {
         return db()->value(

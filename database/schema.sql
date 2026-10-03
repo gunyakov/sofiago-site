@@ -183,6 +183,7 @@ CREATE TABLE IF NOT EXISTS listings (
     instagram_url       VARCHAR(255) NULL,
     twitter_url         VARCHAR(255) NULL,
     linkedin_url        VARCHAR(255) NULL,
+    menu_url            VARCHAR(255) NULL COMMENT 'Link to the place''s menu (a page or a PDF) — the app''s "Menu" button on the place page.',
     map_icon_path       VARCHAR(255) NULL COMMENT 'Root-relative URL of a custom marker icon (PNG, alpha preserved) to show on the map instead of the default pin — set via Upload::storeIcon(), NULL until the owner uploads one.',
     opening_hours       JSON NULL COMMENT 'day => {open,close} in HH:MM, e.g. {"mon":{"open":"08:00","close":"18:00"}} — a missing day means closed; see Listing::decodeHours()',
     is_vip              TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'VIP tier vs. plain — no admin UI to set this yet, just the column and Listing::randomFeatured()''s VIP-first random sampling for the home page map (see that method). Everything is 0/plain until that UI exists.',
@@ -428,6 +429,10 @@ CREATE TABLE IF NOT EXISTS venue_units (
 -- then the two CREATE TABLE IF NOT EXISTS statements above create the new tables themselves.
 -- All idempotent, safe to run unconditionally. A genuinely fresh install doesn't need any of
 -- this, the CREATE TABLE above already has the column/tables.
+--
+-- 2026-10-03: listings.menu_url (the app's "Menu" button) — on a DB that already had `listings`:
+--   ALTER TABLE listings ADD COLUMN IF NOT EXISTS menu_url VARCHAR(255) NULL AFTER linkedin_url;
+-- Plain column, safe to run unconditionally. Applied to sofiago.eu's DB on 2026-10-03.
 --
 -- 2026-09-08: school_admission_scores (the single-table first draft — grouped by paralelka
 -- *name* and collapsed to "latest round only", both wrong, see school_paralelki's comment above)

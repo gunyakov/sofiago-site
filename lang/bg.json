@@ -497,5 +497,8 @@
     "stop_share.error": "Неуспешно зареждане. Опитайте отново след малко.",
     "stop_share.scheduled": "по разписание",
     "stop_share.app_pitch": "Превозните средства на живо, маршрути и разписания — в приложението SofiaGO.",
-    "stop_share.get_app": "Изтегли от Google Play"
+    "stop_share.get_app": "Изтегли от Google Play",
+    "validation.current_password_wrong": "Текущата парола е грешна.",
+    "dashboard.form.menu_url": "Линк към менюто",
+    "listing.menu": "Меню"
 }

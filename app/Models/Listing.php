@@ -124,7 +124,8 @@ final class Listing
     private const MARKER_COLUMNS = "l.id, l.slug, l.title, l.lat, l.lng, l.map_icon_path, c.slug AS category_slug, c.icon AS category_icon,
                (SELECT path FROM listing_media m WHERE m.listing_id = l.id ORDER BY is_cover DESC, sort_order ASC LIMIT 1) AS cover_path,
                (SELECT ROUND(AVG(rating), 1) FROM comments cm WHERE cm.listing_id = l.id AND cm.status = 'approved') AS avg_rating,
-               (SELECT COUNT(*) FROM comments cm WHERE cm.listing_id = l.id AND cm.status = 'approved') AS reviews_count";
+               (SELECT COUNT(*) FROM comments cm WHERE cm.listing_id = l.id AND cm.status = 'approved') AS reviews_count,
+               l.address, l.opening_hours";
 
     /**
      * Map markers for the whole active catalog (optionally filtered) — every matching row, no

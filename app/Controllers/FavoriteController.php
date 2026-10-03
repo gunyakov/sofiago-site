@@ -6,6 +6,7 @@ namespace Sofiago\Controllers;
 
 use Sofiago\Middleware\Guards;
 use Sofiago\Models\Favorite;
+use Sofiago\Models\Listing;
 
 final class FavoriteController
 {
@@ -17,6 +18,55 @@ final class FavoriteController
             'title' => t('dashboard.favorites.title'),
             'listings' => Favorite::forUser((int) auth()->id()),
         ], 'layout/dashboard.tpl.php');
+    }
+
+    /**
+     * GET /api/favorites — the bearer-token user's favorites, for sofiago-flutter's two-way sync
+     * of the place page's heart (2026-10-03). Add/remove below are idempotent so a retried sync
+     * can't flip anything.
+     */
+    public function indexJson(array $params): void
+    {
+        $user = Guards::requireApiAuth();
+        $places = array_map(static fn (array $row): array => [
+            'slug' => $row['slug'],
+            'title' => $row['title'],
+            'lat' => (float) $row['lat'],
+            'lng' => (float) $row['lng'],
+        ], Favorite::placesForUser((int) $user['id']));
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($places, JSON_UNESCAPED_UNICODE);
+    }
+
+    /** POST /api/listings/{slug}/favorite */
+    public function addJson(array $params): void
+    {
+        $this->changeJson($params, true);
+    }
+
+    /** DELETE /api/listings/{slug}/favorite */
+    public function removeJson(array $params): void
+    {
+        $this->changeJson($params, false);
+    }
+
+    private function changeJson(array $params, bool $add): void
+    {
+        $user = Guards::requireApiAuth();
+        $listing = Listing::findBySlug((string) $params['slug']);
+        if (!$listing) {
+            abortJson(404, 'not_found');
+        }
+
+        if ($add) {
+            Favorite::add((int) $user['id'], (int) $listing['id']);
+        } else {
+            Favorite::remove((int) $user['id'], (int) $listing['id']);
+        }
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['favorited' => $add], JSON_UNESCAPED_UNICODE);
     }
 
     /** POST /api/favorites/{id}/toggle — small JSON endpoint for the favorite-button island. */

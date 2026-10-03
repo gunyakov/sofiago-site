@@ -497,5 +497,8 @@
     "stop_share.error": "Could not load departures. Try again in a moment.",
     "stop_share.scheduled": "timetable",
     "stop_share.app_pitch": "Live vehicles on the map, routes and timetables — in the SofiaGO app.",
-    "stop_share.get_app": "Get it on Google Play"
+    "stop_share.get_app": "Get it on Google Play",
+    "validation.current_password_wrong": "Current password is incorrect.",
+    "dashboard.form.menu_url": "Menu link",
+    "listing.menu": "Menu"
 }

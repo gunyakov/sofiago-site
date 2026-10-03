@@ -292,6 +292,10 @@ class ListingManageController
         $instagram = trim((string) ($_POST['instagram_url'] ?? ''));
         $twitter = trim((string) ($_POST['twitter_url'] ?? ''));
         $linkedin = trim((string) ($_POST['linkedin_url'] ?? ''));
+        // Optional field added 2026-10-03 — app builds before it don't send it, and an edit from
+        // one of those must not wipe a menu link set elsewhere, so it's only written when present.
+        $hasMenu = array_key_exists('menu_url', $_POST);
+        $menu = trim((string) ($_POST['menu_url'] ?? ''));
 
         if (mb_strlen($title) < 3 || mb_strlen($title) > 160) {
             $errors[] = t('validation.title_length');
@@ -327,7 +331,7 @@ class ListingManageController
             $errors[] = t('validation.email_field_invalid');
         }
 
-        foreach (['website' => $website, 'facebook_url' => $facebook, 'instagram_url' => $instagram, 'twitter_url' => $twitter, 'linkedin_url' => $linkedin] as $field => $value) {
+        foreach (['website' => $website, 'facebook_url' => $facebook, 'instagram_url' => $instagram, 'twitter_url' => $twitter, 'linkedin_url' => $linkedin, 'menu_url' => $menu] as $field => $value) {
             if ($value !== '' && !filter_var($value, FILTER_VALIDATE_URL)) {
                 $errors[] = t('validation.url_invalid', ['field' => $field]);
             }
@@ -375,7 +379,7 @@ class ListingManageController
         // AdminVenueMapController, nothing here builds a map itself.
         $hasMap = !empty($_POST['has_map']) ? 1 : 0;
 
-        return [
+        $data = [
             'title' => $title,
             'category_id' => $categoryId,
             'description_en' => $descriptionEn,
@@ -397,6 +401,11 @@ class ListingManageController
             'linkedin_url' => $linkedin,
             'opening_hours' => $hours !== [] ? json_encode($hours, JSON_UNESCAPED_UNICODE) : null,
         ];
+        if ($hasMenu) {
+            $data['menu_url'] = $menu !== '' ? $menu : null;
+        }
+
+        return $data;
     }
 
     /** @param int $categoryId The listing's own category_id (just-validated $data['category_id']) — decides which submitted tag ids are even legal, see Tag::validIdsForCategory(). */

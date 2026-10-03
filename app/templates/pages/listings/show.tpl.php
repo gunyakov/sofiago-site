@@ -210,6 +210,9 @@
                 <?php if (!empty($listing['website'])): ?>
                 <div class="mb-2"><i class="fa-solid fa-globe me-2 text-primary"></i><a href="<?= e($listing['website']) ?>" target="_blank" rel="noopener" class="text-dark text-decoration-none"><?= e($listing['website']) ?></a></div>
                 <?php endif; ?>
+                <?php if (!empty($listing['menu_url'])): ?>
+                <div class="mb-2"><i class="fa-solid fa-book-open me-2 text-primary"></i><a href="<?= e($listing['menu_url']) ?>" target="_blank" rel="noopener" class="text-dark text-decoration-none"><?= e(t('listing.menu')) ?></a></div>
+                <?php endif; ?>
                 <?php if (!empty($listing['email'])): ?>
                 <div class="mb-2"><i class="fa-solid fa-envelope me-2 text-primary"></i><a href="mailto:<?= e($listing['email']) ?>" class="text-dark text-decoration-none"><?= e($listing['email']) ?></a></div>
                 <?php endif; ?>

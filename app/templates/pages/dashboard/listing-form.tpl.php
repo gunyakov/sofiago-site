@@ -380,6 +380,10 @@ if ($oldHours !== null) {
                         <label class="fw-medium mb-2"><?= e(t('dashboard.form.email')) ?></label>
                         <input type="email" name="email" class="form-control" value="<?= $isEdit ? e($listing['email']) : old('email') ?>">
                     </div>
+                    <div class="col-sm-12">
+                        <label class="fw-medium mb-2"><?= e(t('dashboard.form.menu_url')) ?></label>
+                        <input type="text" name="menu_url" class="form-control" placeholder="https://" value="<?= $isEdit ? e($listing['menu_url'] ?? '') : old('menu_url') ?>">
+                    </div>
                     <div class="col-sm-12"><hr></div>
                     <div class="col-sm-6">
                         <label class="fw-medium mb-2">Facebook</label>

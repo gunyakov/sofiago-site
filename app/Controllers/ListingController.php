@@ -117,11 +117,15 @@ final class ListingController
 
         $featured = ($_GET['featured'] ?? '') === '1';
 
+        $rows = $featured ? Listing::randomFeatured($filters) : Listing::markers($filters);
+        // Decoded like showJson()'s, for the app's "Open now" on list cards (2026-10-03).
+        foreach ($rows as &$row) {
+            $row['opening_hours'] = Listing::decodeHours($row['opening_hours'] ?? null);
+        }
+        unset($row);
+
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(
-            $featured ? Listing::randomFeatured($filters) : Listing::markers($filters),
-            JSON_UNESCAPED_UNICODE
-        );
+        echo json_encode($rows, JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -221,6 +225,7 @@ final class ListingController
             'instagram_url' => $listing['instagram_url'],
             'twitter_url' => $listing['twitter_url'],
             'linkedin_url' => $listing['linkedin_url'],
+            'menu_url' => $listing['menu_url'] ?? null,
             'category_slug' => $listing['category_slug'],
             'category_name' => Category::label($listing),
             'map_icon_path' => $listing['map_icon_path'],

@@ -94,6 +94,52 @@ final class AuthApiController
         echo json_encode(self::userPayload($user), JSON_UNESCAPED_UNICODE);
     }
 
+    /**
+     * POST /api/auth/me — the app's profile edit (2026-10-03). Only `name` for now; email stays
+     * as registered, since changing it would need its own re-verification round trip.
+     */
+    public function update(array $params): void
+    {
+        $user = Guards::requireApiAuth();
+        $name = trim((string) ($_POST['name'] ?? ''));
+
+        if (mb_strlen($name) < 2 || mb_strlen($name) > 120) {
+            abortJson(422, 'validation_failed', ['errors' => [t('validation.name_length')]]);
+        }
+
+        User::updateName((int) $user['id'], $name);
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(self::userPayload(User::findById((int) $user['id'])), JSON_UNESCAPED_UNICODE);
+    }
+
+    /** POST /api/auth/password — current_password + password + password_confirmation. Keeps this device's token. */
+    public function changePassword(array $params): void
+    {
+        $user = Guards::requireApiAuth();
+        $current = (string) ($_POST['current_password'] ?? '');
+        $password = (string) ($_POST['password'] ?? '');
+        $confirm = (string) ($_POST['password_confirmation'] ?? '');
+
+        $errors = [];
+        if (!password_verify($current, (string) $user['password_hash'])) {
+            $errors[] = t('validation.current_password_wrong');
+        }
+        if (mb_strlen($password) < 8) {
+            $errors[] = t('validation.password_length');
+        } elseif ($password !== $confirm) {
+            $errors[] = t('validation.password_mismatch');
+        }
+        if ($errors !== []) {
+            abortJson(422, 'validation_failed', ['errors' => $errors]);
+        }
+
+        User::updatePassword((int) $user['id'], $password);
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
+    }
+
     private function respondWithUser(array $user, string $token): void
     {
         header('Content-Type: application/json; charset=utf-8');
@@ -109,6 +155,8 @@ final class AuthApiController
             'email' => $user['email'],
             'locale' => $user['locale'],
             'email_verified' => !empty($user['email_verified_at']),
+            // Added 2026-10-03 for the app's profile stats; older builds ignore it.
+            'reviews_count' => User::reviewsCount((int) $user['id']),
         ];
     }
 }

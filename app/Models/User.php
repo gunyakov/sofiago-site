@@ -74,6 +74,20 @@ final class User
         db()->update('users', ['email_verified_at' => date('Y-m-d H:i:s')], 'id = :id', ['id' => $userId]);
     }
 
+    public static function updateName(int $userId, string $name): void
+    {
+        db()->update('users', ['name' => $name], 'id = :id', ['id' => $userId]);
+    }
+
+    /** Reviews (comments) this user wrote — pending ones count too, rejected ones don't. */
+    public static function reviewsCount(int $userId): int
+    {
+        return (int) db()->value(
+            "SELECT COUNT(*) FROM comments WHERE user_id = ? AND status <> 'rejected'",
+            [$userId]
+        );
+    }
+
     public static function updatePassword(int $userId, string $password): void
     {
         db()->update(

@@ -56,8 +56,10 @@ final class Category
      */
     public static function label(array $row): string
     {
-        $slug = $row['slug'] ?? $row['category_slug'] ?? null;
-        $name = $row['name'] ?? $row['category_name'] ?? '';
+        // category_* first: a listing row also has its own `slug` (the listing's), which used
+        // to win here, missed KEYS and fell back to the raw English category_name.
+        $slug = $row['category_slug'] ?? $row['slug'] ?? null;
+        $name = $row['category_name'] ?? $row['name'] ?? '';
         $key = $slug !== null ? (self::KEYS[$slug] ?? null) : null;
 
         return $key !== null ? t($key) : (string) $name;
