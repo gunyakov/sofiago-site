@@ -32,7 +32,8 @@ $router->get('/robots.txt', [PageController::class, 'robots']);
 $router->get('/sitemap.xml', [PageController::class, 'sitemap']);
 
 // A stop shared from the app ("Сподели") — see StopShareController's doc comment.
-$router->get('/s/{code}', [StopShareController::class, 'show']);
+$router->get('/s/{code}', [StopShareController::class, 'legacy']);
+$router->get('/s/{city}/{code}', [StopShareController::class, 'show']);
 
 $router->get('/sign-up', [AuthController::class, 'showRegister']);
 $router->post('/sign-up', [AuthController::class, 'register']);

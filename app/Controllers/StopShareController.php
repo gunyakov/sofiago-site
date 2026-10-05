@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Sofiago\Controllers;
 
 /**
- * GET /s/{code} — the page a stop shared from the SofiaGO app opens (the app's stop sheet
- * "Сподели" button sends https://sofiago.eu/s/<stop code>).
+ * GET /s/{city}/{code} — the page a stop shared from the SofiaGO app opens (the app's stop sheet
+ * "Сподели" button sends https://sofiago.eu/s/<city>/<stop code>; the city is in the path since
+ * stop codes repeat between cities). GET /s/{code}, what builds before cities shared, redirects
+ * to Sofia's.
  *
  * With the app installed, Android hands this URL straight to it (App Links: the app's manifest
  * claims /s/ and public_html/.well-known/assetlinks.json vouches for it), so this page is what
@@ -24,19 +26,33 @@ namespace Sofiago\Controllers;
  */
 final class StopShareController
 {
-    /** Sofia's feed id in OTP. */
-    private const FEED = '1';
+    /** City (the app's `City.id`) => its feed id in OTP. */
+    private const FEEDS = ['sofia' => '1', 'varna' => '2'];
 
     private const CACHE_TTL = 86400;
 
-    public function show(array $params): void
+    /** GET /s/{code} — a link shared before cities: Sofia's stop, at its canonical address. */
+    public function legacy(array $params): void
     {
         $code = (string) ($params['code'] ?? '');
         if (!preg_match('/^[A-Za-z0-9]{1,8}$/', $code)) {
             abort(404, t('stop_share.not_found'));
         }
+        $query = (string) ($_SERVER['QUERY_STRING'] ?? '');
+        header('Location: /s/sofia/' . rawurlencode($code) . ($query !== '' ? '?' . $query : ''), true, 301);
+        exit;
+    }
 
-        $stops = $this->stopsWithCode($code);
+    public function show(array $params): void
+    {
+        $city = (string) ($params['city'] ?? '');
+        $code = (string) ($params['code'] ?? '');
+        $feed = self::FEEDS[$city] ?? null;
+        if ($feed === null || !preg_match('/^[A-Za-z0-9]{1,8}$/', $code)) {
+            abort(404, t('stop_share.not_found'));
+        }
+
+        $stops = $this->stopsWithCode($feed, $code);
         if ($stops === []) {
             abort(404, t('stop_share.not_found'));
         }
@@ -44,6 +60,7 @@ final class StopShareController
         $first = $stops[0];
         echo render('pages/stops/share.tpl.php', [
             'code' => $code,
+            'path' => rawurlencode($city) . '/' . rawurlencode($code),
             'name' => self::nameCase((string) $first['name']),
             'lat' => (float) $first['lat'],
             'lon' => (float) $first['lon'],
@@ -52,15 +69,15 @@ final class StopShareController
     }
 
     /** @return list<array{gtfsId: string, code: ?string, name: string, lat: float, lon: float}> */
-    private function stopsWithCode(string $code): array
+    private function stopsWithCode(string $feed, string $code): array
     {
-        $index = $this->stopIndex();
+        $index = $this->stopIndex($feed);
         $matches = $index[$code] ?? [];
         // Metro stations: code-less or numbered differently in the app — accept the bare OTP id.
         if ($matches === []) {
             foreach ($index as $stops) {
                 foreach ($stops as $stop) {
-                    if ($stop['gtfsId'] === self::FEED . ':' . $code) {
+                    if ($stop['gtfsId'] === $feed . ':' . $code) {
                         $matches[] = $stop;
                     }
                 }
@@ -71,9 +88,9 @@ final class StopShareController
     }
 
     /** @return array<string, list<array>> code => OTP stops */
-    private function stopIndex(): array
+    private function stopIndex(string $feed): array
     {
-        $file = sys_get_temp_dir() . '/sofiago-stop-index-' . self::FEED . '.json';
+        $file = sys_get_temp_dir() . '/sofiago-stop-index-' . $feed . '.json';
         if (is_file($file) && time() - (int) filemtime($file) < self::CACHE_TTL) {
             $cached = json_decode((string) file_get_contents($file), true);
             if (is_array($cached)) {
@@ -92,12 +109,12 @@ final class StopShareController
 
         $index = [];
         foreach ($stops as $stop) {
-            if (!is_array($stop) || !str_starts_with((string) ($stop['gtfsId'] ?? ''), self::FEED . ':')) {
+            if (!is_array($stop) || !str_starts_with((string) ($stop['gtfsId'] ?? ''), $feed . ':')) {
                 continue;
             }
             $key = (string) ($stop['code'] ?? '');
             if ($key === '') {
-                $key = substr((string) $stop['gtfsId'], strlen(self::FEED) + 1);
+                $key = substr((string) $stop['gtfsId'], strlen($feed) + 1);
             }
             $index[$key][] = $stop;
         }

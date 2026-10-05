@@ -5,6 +5,7 @@
  * pill buttons, brand #F84525 for controls only, transport colors for line badges).
  *
  * @var string $code
+ * @var string $path  the shared link's path after /s/ — "<city>/<code>"
  * @var string $name
  * @var float $lat
  * @var float $lon
@@ -13,11 +14,11 @@
 // Plain str_replace rather than t()'s own replacement: the deployed page printed ":code" verbatim.
 $stopLabel = str_replace(':code', $code, t('stop_share.stop_code'));
 $title = $name . ' · ' . $stopLabel;
-$shareUrl = 'https://sofiago.eu/s/' . rawurlencode($code);
+$shareUrl = 'https://sofiago.eu/s/' . $path;
 $playUrl = 'https://play.google.com/store/apps/details?id=eu.sofiago';
 // Android: open the app's own /s/ handler when installed, else Google Play. Works whether or not
 // App Links verification has gone through, because the intent names the package.
-$intentUrl = 'intent://sofiago.eu/s/' . rawurlencode($code)
+$intentUrl = 'intent://sofiago.eu/s/' . $path
     . '#Intent;scheme=https;package=eu.sofiago;S.browser_fallback_url=' . rawurlencode($playUrl) . ';end';
 $mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' . $lat . ',' . $lon;
 $strings = [
@@ -133,17 +134,15 @@ $strings = [
         M1: ['#B71C1C', '#fff'], M2: ['#1565C0', '#fff'], M3: ['#388E3C', '#fff'], M4: ['#FFC107', '#000']
     };
 
-    // Same split as the app (sofiago-data's dbTrips.ts): OTP reports Sofia's electric buses as
-    // trolleybuses; real trolleybus routes are numbered up to 11.
+    // Same as the app (transport_type.dart transportTypeOf): the prepared feeds mark electric
+    // buses route_type 799 and night lines 705 (sofiago-data prepare/sofia.ts), for every city.
     function typeOf(route) {
         var code = route.shortName || '';
         if (route.mode === 'SUBWAY') return code;
         if (route.mode === 'TRAM') return 'tram';
-        if (/^N/i.test(code)) return 'nightbus';
-        if (route.mode === 'TROLLEYBUS') {
-            var n = parseInt(String(route.gtfsId || '').split(':').pop().slice(2), 10);
-            return !isNaN(n) && n <= 11 ? 'trolleybus' : 'elbus';
-        }
+        if (route.mode === 'TROLLEYBUS') return 'trolleybus';
+        if (route.type === 799) return 'elbus';
+        if (route.type === 705) return 'nightbus';
         return 'bus';
     }
 
@@ -151,7 +150,7 @@ $strings = [
         return String(s || '').toLowerCase().replace(/(^|[\s.\-„"])(\S)/g, function (m, p, c) { return p + c.toUpperCase(); });
     }
 
-    var QUERY = 'query($id:String!,$start:Long){stop(id:$id){stoptimesWithoutPatterns(startTime:$start,timeRange:7200,numberOfDepartures:60){scheduledDeparture realtimeDeparture realtime serviceDay headsign trip{tripHeadsign route{gtfsId shortName mode}}}}}';
+    var QUERY = 'query($id:String!,$start:Long){stop(id:$id){stoptimesWithoutPatterns(startTime:$start,timeRange:7200,numberOfDepartures:60){scheduledDeparture realtimeDeparture realtime serviceDay headsign trip{tripHeadsign route{gtfsId shortName mode type}}}}}';
 
     function fetchStop(id, start) {
         return fetch('/gtfs', {
