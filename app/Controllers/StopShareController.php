@@ -27,7 +27,7 @@ namespace Sofiago\Controllers;
 final class StopShareController
 {
     /** City (the app's `City.id`) => its feed id in OTP. */
-    private const FEEDS = ['sofia' => '1', 'varna' => '2'];
+    private const FEEDS = ['sofia' => '1', 'varna' => '2', 'blagoevgrad' => '9'];
 
     private const CACHE_TTL = 86400;
 
